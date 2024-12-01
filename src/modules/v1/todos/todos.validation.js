@@ -28,7 +28,7 @@ const create = {
   },
 };
 
-const get = {
+const query = {
   query: {
     type: "object",
     minProperties: 1,
@@ -47,6 +47,10 @@ const update = {
     properties: todoSchema,
     additionalProperties: false,
   },
+};
+
+const get = {
+  params,
 };
 
 const remove = {
@@ -75,6 +79,7 @@ const remove = {
 
 const todoValidation = {
   create,
+  query,
   get,
   update,
   remove,

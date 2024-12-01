@@ -17,6 +17,7 @@ const query = catchAsync(async (req, res) => {
 
 const get = catchAsync(async (req, res) => {
   const { id } = req.params;
+  console.log("iddsds", id);
   const todo = await todoService.getById(id);
   res.send(todo);
 });

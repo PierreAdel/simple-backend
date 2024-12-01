@@ -1,22 +1,21 @@
 const _ = require("lodash");
-const bcrypt = require("bcryptjs");
 const httpStatus = require("http-status");
 const ApiError = require("../../../utils/ApiError");
 const dalService = require("../../dal/dal.service");
 const errorCode = require("../../../codes/error.code");
+const { ObjectId } = require("mongodb");
 
 const collectionName = "todos";
 
 async function create(createDto) {
-  const document = await dalService.readOne(
-    collectionName,
-    { email: createDto.email },
-    {},
-    createDto.email,
-  );
-  if (document)
-    throw new ApiError(httpStatus.BAD_REQUEST, errorCode.TAKEN_EMAIL);
-  createDto.password = await bcrypt.hash(createDto.password, 10);
+  // const document = await dalService.readOne(
+  //   collectionName,
+  //   { _id: new ObjectId(createDto.id) },
+  //   {},
+  //   createDto.id,
+  // );
+  // if (document)
+  //   throw new ApiError(httpStatus.BAD_REQUEST, errorCode.TAKEN_EMAIL);
   return dalService.createOne(collectionName, createDto);
 }
 
@@ -34,13 +33,12 @@ async function query(queryDto) {
   if (queryDto.sort)
     options.sort = _.mapValues(
       _.keyBy(queryDto.sort.split(" "), (e) =>
-        e[0] === "-" ? e.substring(1) : e,
+        e[0] === "-" ? e.substring(1) : e
       ),
-      (e) => (e[0] === "-" ? -1 : 1),
+      (e) => (e[0] === "-" ? -1 : 1)
     );
   const result = await dalService.readMany(collectionName, filters, {
     ...options,
-    projection: { password: 0 },
   });
   return result;
 }
@@ -48,50 +46,37 @@ async function query(queryDto) {
 async function getById(id) {
   const document = await dalService.readOne(
     collectionName,
-    { email: id },
+    { _id: new ObjectId(id) },
     {},
-    id,
+    id
   );
   if (!document)
-    throw new ApiError(httpStatus.NOT_FOUND, errorCode.UNREGISTERED_EMAIL);
+    throw new ApiError(httpStatus.NOT_FOUND, errorCode.INVALID_TODO_ID);
   return document;
 }
 
 async function updateById(id, updateDto) {
-  if (updateDto.email) {
-    const document = await dalService.readOne(
-      collectionName,
-      { email: id },
-      {},
-      id,
-    );
-    if (document)
-      throw new ApiError(httpStatus.BAD_REQUEST, errorCode.TAKEN_EMAIL);
-    updateDto.verified = false;
-  }
-  if (updateDto.password)
-    updateDto.password = await bcrypt.hash(updateDto.password, 10);
   const document = await dalService.updateOne(
     collectionName,
-    { email: id },
+    { _id: new ObjectId(id) },
     { $set: updateDto },
     { new: true },
-    id,
+    id
   );
   if (!document)
-    throw new ApiError(httpStatus.NOT_FOUND, errorCode.UNREGISTERED_EMAIL);
+    throw new ApiError(httpStatus.NOT_FOUND, errorCode.INVALID_TODO_ID);
   return document;
 }
 
 async function deleteById(id) {
   const deleted = await dalService.deleteOne(
     collectionName,
-    { email: id },
+    { _id: new ObjectId(id) },
     {},
-    id,
+    id
   );
   if (!deleted)
-    throw new ApiError(httpStatus.NOT_FOUND, errorCode.UNREGISTERED_EMAIL);
+    throw new ApiError(httpStatus.NOT_FOUND, errorCode.INVALID_TODO_ID);
   return deleted;
 }
 

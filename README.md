@@ -50,7 +50,7 @@ npm start
 
 Node.js: 20.x or higher
 MongoDB: 6.x or higher
-Redis: 7.x or higher
+Redis: 6.x or higher
 
 ## License
 

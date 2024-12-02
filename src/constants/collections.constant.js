@@ -1,7 +1,7 @@
-const todoSchema = require("../modules/v1/todos/todos.schema");
+const notificationSchema = require("../modules/v1/notifications/notifications.schema");
 
 const collectionConstant = {
-  todos: todoSchema,
+  notifications: notificationSchema,
 };
 
 module.exports = collectionConstant;

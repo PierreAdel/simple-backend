@@ -1,7 +1,7 @@
-const todoIndex = require("../modules/v1/todos/todos.index");
+const notificationIndex = require("../modules/v1/notifications/notifications.index");
 
 const indexConstant = {
-  todos: todoIndex,
+  notifications: notificationIndex,
 };
 
 module.exports = indexConstant;

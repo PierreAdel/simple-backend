@@ -1,8 +1,8 @@
 const express = require("express");
-const todoRoute = require("../todos/todos.route");
+const notificationRoute = require("../notifications/notifications.route");
 
 const router = express.Router();
 
-router.use("/todos", todoRoute);
+router.use("/notifications", notificationRoute);
 
 module.exports = router;
